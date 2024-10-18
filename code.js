@@ -9,7 +9,7 @@ function main()
  const css=device+".css"
 
  link.setAttribue("href",css)
- link.setAttribue("rel","stylesheet")
+ link.setAttribute("rel","stylesheet")
 
  head.appendChild(link)
 }
