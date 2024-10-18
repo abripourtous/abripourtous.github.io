@@ -1,3 +1,8 @@
+*
+{
+ text-size-adjust:none;
+}
+
 html,input
 {
  font-size:16vw;
