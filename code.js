@@ -1,4 +1,3 @@
-
 var device="desktop"
 
 function main()
