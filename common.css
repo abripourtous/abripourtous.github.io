@@ -5,6 +5,11 @@ html
  text-size-adjust:none;
 }
 
+input
+{
+ padding:2vw;
+}
+
 .center
 {
  text-align:center;
