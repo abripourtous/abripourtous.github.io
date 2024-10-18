@@ -3,7 +3,8 @@ var device="desktop"
 
 function main()
 {
- alert(device)
+ //if(device=="desktop")
+ // style_add("img","max-height","30%")
 }
 
 function init()
