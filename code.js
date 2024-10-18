@@ -8,7 +8,7 @@ function main()
  const link=document.createElement("link")
  const css=device+".css"
 
- link.setAttribue("href",css)
+ link.setAttribute("href",css)
  link.setAttribute("rel","stylesheet")
 
  head.appendChild(link)
