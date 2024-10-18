@@ -3,8 +3,12 @@ var device="desktop"
 
 function main()
 {
- //if(device=="desktop")
- // style_add("img","max-height","30%")
+ const html=document.documentElement
+ const a=html.getElementsByTagName("head")
+ const head=a[0]
+ const link=document.createElement("link")
+
+ head.appendChild(link)
 }
 
 function init()
