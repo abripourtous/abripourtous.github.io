@@ -7,6 +7,10 @@ function main()
  const a=html.getElementsByTagName("head")
  const head=a[0]
  const link=document.createElement("link")
+ const css=device+".css"
+
+ link.setAttribue("href",css)
+ link.setAttribue("rel","stylesheet")
 
  head.appendChild(link)
 }
