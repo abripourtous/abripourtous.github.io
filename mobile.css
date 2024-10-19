@@ -3,7 +3,7 @@
  text-size-adjust:none;
 }
 
-html
+html,body
 {
  font-size:10vw;
 }
