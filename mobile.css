@@ -5,10 +5,15 @@
 
 body
 {
- font-size:10vw;
+ font-size:4vw;
 }
 
 #logo
 {
  width:25vw;
+}
+
+div
+{
+ border:1px solid red;
 }
