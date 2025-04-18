@@ -1,0 +1,1729 @@
+<!doctype html>
+<script>
+const start=time_get()
+let caught=false
+function abs(x)
+{
+ check(is_num,x)
+ return Math.abs(x)
+}
+function add(x,y,...z)
+{
+ check(is_num,x)
+ check(is_num,y)
+ const r=x+y
+ if(is_full(z))
+  return add(r,...z)
+ return r
+}
+function append(x,y)
+{
+ check(is_arr,x)
+ check(is_arr,y)
+ for(const v of y)
+ {
+  push(x,v)
+ }
+}
+function arr(...x)
+{
+ return [...x]
+}
+function asc(x)
+{
+ check(is_str,x)
+ check(is_single,x)
+ return x.charCodeAt(0)
+}
+function at(x,y,z)
+{
+ check(is_vec,x)
+ check(is_uint,y)
+ const n=dec(x.length)
+ check(between,y,0,n)
+ if(is_undef(z))
+  return x[y]
+ x[y]=z
+}
+function back(x,y,z)
+{
+ check(is_vec,x)
+ if(is_undef(y))
+  return back(x,0)
+ check(is_uint,y)
+ let n=sub(x.length,y)
+ n=dec(n)
+ if(is_undef(z))
+  return at(x,n)
+ at(x,n,z)
+}
+function backtrace()
+{
+ const error=new Error
+ log(error.stack)
+}
+function base36_decode(x)
+{
+ check(is_str,x)
+ let r=""
+ const a=explode(x)
+ while(is_full(a))
+ {
+  const a2=slice_l(a,4)
+  shift(a,4)
+  const s=implode(a2)
+  const n=Number.parseInt(s,36)
+  const range=mul(256,256)
+  check(is_uint,n)
+  check(lte,n,range)
+  const c=chr(n)
+  r=concat(r,c)
+ }
+ return r
+}
+function base36_encode(x)
+{
+ check(is_str,x)
+ let r=""
+ for(const v of x)
+ {
+  const n=asc(v)
+  let s=n.toString(36)
+  s=pad_l(s,"0",4)
+  r=concat(r,s)
+ }
+ return r
+}
+function between(x,y,z)
+{
+ check(is_num,x)
+ check(is_num,y)
+ check(is_num,z)
+ check(gte,z,y)
+ if(lt(x,y))
+  return false
+ if(gt(x,z))
+  return false
+ return true
+}
+function check(x,...y)
+{
+ if(is_true(x))
+ {
+  if(is_empty(y))
+   return
+ }
+ else if(is_fn(x))
+ {
+  const b=x(...y)
+  if(is_true(b))
+   return
+ }
+ stop()
+}
+function chr(x)
+{
+ check(is_uint,x)
+ return String.fromCharCode(x)
+}
+function clear(x)
+{
+ check(is_arr,x)
+ x.splice(0)
+}
+function clone(x)
+{
+ check(is_def,x)
+ return structuredClone(x)
+}
+function cmp(x,y)
+{
+ check(is_def,x)
+ check(is_def,y)
+ if(x>y)
+  return 1
+ if(x<y)
+  return -1
+ return 0
+}
+function collate(x)
+{
+ check(is_arr,x)
+ function is_delimited(x)
+ {
+  if(same(x,"_"))
+   return false
+  if(is_punct(x))
+   return true
+  if(is_space(x))
+   return true
+  return false
+ }
+ const a=arr()
+ for(const v of x)
+ {
+  if(is_empty(a))
+  {
+   push(a,v)
+   continue
+  }
+  const left1=back(a)
+  const left2=back(left1)
+  const right1=v
+  const right2=front(right1)
+  if(is_delimited(left2))
+  {
+  }
+  else if(is_delimited(right2))
+  {
+  }
+  else
+  {
+   push(a,right1)
+   continue
+  }
+  const s=concat(left1,right1)
+  drop(a)
+  push(a,s)
+ }
+ return join(a," ")
+}
+function concat(...x)
+{
+ return implode(x)
+}
+function contain(x,y)
+{
+ check(is_vec,x)
+ if(is_str(x))
+  check(is_str,y)
+ check(is_def,y)
+ return x.includes(y)
+}
+function date_get(x)
+{
+ if(is_undef(x))
+ {
+  const n=time_get()
+  return date_get(n)
+ }
+ check(is_num,x)
+ const n=mul(x,1000)
+ const o=new Date(n)
+ const y=o.getFullYear()
+ let m=o.getMonth()
+ m=inc(m)
+ m=pad_l(m,"0",2)
+ let d=o.getDate()
+ d=pad_l(d,"0",2)
+ return concat(y,"/",m,"/",d)
+}
+function dec(x)
+{
+ check(is_num,x)
+ return sub(x,1)
+}
+function different(x,y)
+{
+ return x!==y
+}
+function div(x,y,...z)
+{
+ check(is_num,x)
+ check(is_num,y)
+ check(different,y,0)
+ const r=x/y
+ if(is_full(z))
+  return div(r,...z)
+ return r
+}
+function drop(x,y)
+{
+ check(is_arr,x)
+ if(is_undef(y))
+  return drop(x,1)
+ pop(x,y)
+}
+function dump(x)
+{
+ check(is_def,x)
+ const s=to_dump(x)
+ log(s)
+}
+function dup(x)
+{
+ check(is_container,x)
+ if(is_arr(x))
+  return slice(x,0)
+ else if(is_obj(x))
+ {
+  const r=obj()
+  merge(r,x)
+  return r
+ }
+ else
+  stop()
+}
+function every(x,y)
+{
+ check(is_arr,x)
+ check(is_fn,y)
+ for(const v of x)
+ {
+  if(!y(v))
+   return false
+ }
+ return true
+}
+function explode(x)
+{
+ check(is_str,x)
+ const r=arr()
+ for(const v of x)
+ {
+  push(r,v)
+ }
+ return r
+}
+function extract(x,y)
+{
+ check(is_arr,x)
+ check(is_def,y)
+ let r=false
+ const a=dup(x)
+ clear(x)
+ for(const v of a)
+ {
+  if(same(v,y))
+   r=true
+  else
+   push(x,v)
+ }
+ return r
+}
+function find(x,y)
+{
+ check(is_arr,x)
+ check(is_def,y)
+ for(const k in x)
+ {
+  const i=to_i(k)
+  const v=at(x,i)
+  if(same(v,y))
+   return i
+ }
+ return -1
+}
+function front(x)
+{
+ check(is_vec,x)
+ return at(x,0)
+}
+function get(x,y)
+{
+ check(is_obj,x)
+ check(is_str,y)
+ check(has,x,y)
+ return x[y]
+}
+function gt(x,y)
+{
+ check(is_num,x)
+ check(is_num,y)
+ return x>y
+}
+function gte(x,y)
+{
+ check(is_num,x)
+ check(is_num,y)
+ return x>=y
+}
+function has(x,y)
+{
+ check(is_obj,x)
+ check(is_str,y)
+ return y in x
+}
+function head(x,y)
+{
+ check(is_arr,x)
+ check(is_uint,y)
+ if(lt(x.length,y))
+  return dup(x)
+ return slice_l(x,y)
+}
+function implode(x)
+{
+ check(is_arr,x)
+ return join(x,"")
+}
+function inc(x)
+{
+ check(is_num,x)
+ return add(x,1)
+}
+function is_access(x)
+{
+ if(!is_str(x))
+  return false
+ if(is_empty(x))
+  return false
+ const a=split(x,".")
+ if(is_single(a))
+  return false
+ return every(a,is_identifier)
+}
+function is_alnum(x)
+{
+ if(!is_str(x))
+  return false
+ if(is_empty(x))
+  return false
+ for(const v of x)
+ {
+  if(is_alpha(v))
+   continue
+  if(is_digit(v))
+   continue
+  return false
+ }
+ return true
+}
+function is_alpha(x)
+{
+ if(!is_str(x))
+  return false
+ if(is_empty(x))
+  return false
+ const lower="_abcdefghijklmnopqrstuvwxyz"
+ const upper=to_upper(lower)
+ for(const v of x)
+ {
+  if(contain(lower,v))
+   continue
+  if(contain(upper,v))
+   continue
+  return false
+ }
+ return true
+}
+function is_arr(x)
+{
+ return Array.isArray(x)
+}
+function is_blank(x)
+{
+ if(!is_str(x))
+  return false
+ if(is_empty(x))
+  return true
+ if(is_space(x))
+  return true
+ return false
+}
+function is_browser()
+{
+ try
+ {
+  window
+ }
+ catch
+ {
+  return false
+ }
+ return true
+}
+function is_comment(x)
+{
+ if(!is_ln(x))
+  return false
+ return match_l(x,"//")
+}
+function is_container(x)
+{
+ if(is_arr(x))
+  return true
+ if(is_obj(x))
+  return true
+ return false
+}
+function is_cool(x)
+{
+ if(is_num(x))
+  return true
+ if(is_str(x))
+  return true
+ return false
+}
+function is_def(x)
+{
+ return !is_undef(x)
+}
+function is_digit(x)
+{
+ if(!is_str(x))
+  return false
+ if(is_empty(x))
+  return false
+ const digits="0123456789"
+ for(const v of x)
+ {
+  if(!contain(digits,v))
+   return false
+ }
+ return true
+}
+function is_empty(x)
+{
+ if(is_vec(x))
+  return same(x.length,0)
+ return false
+}
+function is_false(x)
+{
+ return same(x,false)
+}
+function is_fn(x)
+{
+ const s=typeof x
+ if(different(s,"function"))
+  return false
+ if(same(x.constructor.name,"GeneratorFunction"))
+  return false
+ return true
+}
+function is_fragment(x)
+{
+ if(!is_str(x))
+  return true
+ if(is_alnum(x))
+  return true
+ if(is_space(x))
+  return true
+ return false
+}
+function is_full(x)
+{
+ if(is_vec(x))
+  return !is_empty(x)
+ return false
+}
+function is_gn(x)
+{
+ const s=typeof x
+ if(different(s,"function"))
+  return false
+ if(different(x.constructor.name,"GeneratorFunction"))
+  return false
+ return true
+}
+function is_identifier(x)
+{
+ if(!is_str(x))
+  return false
+ if(is_empty(x))
+  return false
+ const s=front(x)
+ if(!is_alpha(s))
+  return false
+ for(const v of x)
+ {
+  if(!is_alnum(v))
+   return false
+ }
+ return true
+}
+function is_int(x)
+{
+ return Number.isInteger(x)
+}
+function is_json(x)
+{
+ if(!is_str(x))
+  return false
+ if(is_empty(x))
+  return false
+ try
+ {
+  json_decode(x)
+ }
+ catch
+ {
+  return false
+ }
+ return true
+}
+function is_last(x,y)
+{
+ check(is_arr,x)
+ check(is_uint,y)
+ const n=dec(x.length)
+ return same(n,y)
+}
+function is_lisp(x)
+{
+ if(!is_str(x))
+  return false
+ const a=split(x,"-")
+ return every(a,is_alnum)
+}
+function is_lit_char(x)
+{
+ if(!is_str(x))
+  return false
+ if(!match_l(x,"'"))
+  return false
+ if(!match_r(x,"'"))
+  return false
+ let s=strip_l(x,"'")
+ s=strip_r(s1,"'")
+ if(is_empty(s))
+  return false
+ s=concat("\"",s,"\"")
+ return is_lit(s)
+}
+function is_lit(x)
+{
+ if(!is_str(x))
+  return false
+ if(!is_json(x))
+  return false
+ const v=json_decode(x)
+ if(!is_str(v))
+  return false
+ const s=json_encode(v)
+ return same(s,x)
+}
+function is_ln(x)
+{
+ if(is_str(x))
+  return !is_txt(x)
+ return false
+}
+function is_many(x)
+{
+ if(is_vec(x))
+  return gt(x.length,1)
+ return false
+}
+function is_member(x)
+{
+ if(!is_str(x))
+  return false
+ if(is_empty(x))
+  return false
+ if(is_identifier(x))
+  return true
+ if(is_lit(x))
+  return true
+ return false
+}
+function is_name(x)
+{
+ if(is_identifier(x))
+  return true
+ if(is_access(x))
+  return true
+ if(is_tuple(x))
+  return true
+ return false
+}
+function is_node()
+{
+ return !is_browser()
+}
+function is_noun(x)
+{
+ if(is_identifier(x))
+  return true
+ if(is_access(x))
+  return true
+ return false
+}
+function is_null(x)
+{
+ return same(x,null)
+}
+function is_num(x)
+{
+ if(Number.isNaN(x))
+  return false
+ if(same(x,Number.NEGATIVE_INFINITY))
+  return false
+ if(same(x,Number.POSITIVE_INFINITY))
+  return false
+ const s=typeof x
+ return same(s,"number")
+}
+function is_numeric(x)
+{
+ if(!is_str(x))
+  return false
+ if(!is_json(x))
+  return false
+ const v=json_decode(x)
+ if(!is_num(v))
+  return false
+ const s=json_encode(v)
+ return same(s,x)
+}
+function is_obj(x)
+{
+ if(is_null(x))
+  return false
+ const s=typeof x
+ return same(s,"object")
+}
+function is_punct(x)
+{
+ if(!is_str(x))
+  return false
+ if(is_empty(x))
+  return false
+ const s="!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
+ for(const v of x)
+ {
+  if(!contain(s,v))
+   return false
+ }
+ return true
+}
+function is_single(x)
+{
+ if(is_vec(x))
+  return same(x.length,1)
+ return false
+}
+function is_space(x)
+{
+ if(!is_str(x))
+  return false
+ if(is_empty(x))
+  return false
+ const s=trim(x)
+ return is_empty(s)
+}
+function is_str(x)
+{
+ const s=typeof x
+ return same(s,"string")
+}
+function is_token(x)
+{
+ if(is_alnum(x))
+  return true
+ if(is_access(x))
+  return true
+ if(is_tuple(x))
+  return true
+ if(is_numeric(x))
+  return true
+ if(is_lit(x))
+  return true
+ if(is_lit_char(x))
+  return true
+ if(is_comment(x))
+  return true
+ return false
+}
+function is_true(x)
+{
+ return same(x,true)
+}
+function is_tuple(x)
+{
+ if(!is_str(x))
+  return false
+ if(is_empty(x))
+  return false
+ const a=scan(x,is_member)
+ if(is_single(a))
+  return false
+ const s=shift(a)
+ if(!is_member(s))
+  return false
+ while(is_full(a))
+ {
+  let s=shift(a)
+  if(different(s,":"))
+   return false
+  if(is_empty(a))
+   return false
+  s=shift(a)
+  if(!is_member(s))
+   return false
+ }
+ return true
+}
+function is_txt(x)
+{
+ if(is_str(x))
+  return contain(x,"\n")
+ return false
+}
+function is_uint(x)
+{
+ if(is_int(x))
+  return gte(x,0)
+ return false
+}
+function is_undef(x)
+{
+ return same(x,undefined)
+}
+function is_vec(x)
+{
+ if(is_str(x))
+  return true
+ if(is_arr(x))
+  return true
+ return false
+}
+function join(x,y)
+{
+ check(is_arr,x)
+ if(is_undef(y))
+  return join(x,"\n")
+ check(is_str,y)
+ return x.join(y)
+}
+function json_decode(x)
+{
+ check(is_str,x)
+ return JSON.parse(x)
+}
+function json_encode(x)
+{
+ check(is_def,x)
+ return JSON.stringify(x)
+}
+function log(...x)
+{
+ console.log(...x)
+}
+function lt(x,y)
+{
+ check(is_num,x)
+ check(is_num,y)
+ return x<y
+}
+function lte(x,y)
+{
+ check(is_num,x)
+ check(is_num,y)
+ return x<=y
+}
+function main()
+{
+ const parameters=arr()
+ function pump()
+ {
+  if(is_fn(init))
+  {
+   init(...parameters)
+   profile()
+  }
+  else if(is_gn(init))
+  {
+   const generator=init(...parameters)
+   function on_timer()
+   {
+    const iterator=generator.next()
+    if(iterator.done)
+    {
+     profile()
+     return
+    }
+    time_timeout(on_timer)
+   }
+   on_timer()
+  }
+ }
+ function profile()
+ {
+  const n=time_now()
+  let s=to_fixed(n)
+  s=concat(s,"s")
+  log("profile",s)
+ }
+ if(is_node())
+ {
+  const a=slice(process.argv,2)
+  append(parameters,a)
+  pump()
+ }
+ else if(is_browser())
+ {
+  let skip=false
+  function on_load()
+  {
+   if(skip)
+    return
+   if(same(document.readyState,"complete"))
+   {
+    pump()
+    skip=true
+   }
+  }
+  window.onload=on(on_load)
+ }
+ else
+  stop()
+}
+function map(x,y)
+{
+ check(is_arr,x)
+ check(is_fn,y)
+ const r=arr()
+ for(const v of x)
+ {
+  const v2=y(v)
+  check(is_def,v2)
+  push(r,v2)
+ }
+ return r
+}
+function match_l(x,y)
+{
+ check(is_str,x)
+ check(is_str,y)
+ if(is_empty(x))
+  return false
+ if(is_empty(y))
+  return false
+ if(gt(y.length,x.length))
+  return false
+ const s=slice_l(x,y.length)
+ return same(s,y)
+}
+function match_r(x,y)
+{
+ check(is_str,x)
+ check(is_str,y)
+ if(is_empty(x))
+  return false
+ if(is_empty(y))
+  return false
+ if(gt(y.length,x.length))
+  return false
+ const s=slice_r(x,y.length)
+ return same(s,y)
+}
+function match(x,y)
+{
+ check(is_str,x)
+ check(is_str,y)
+ let s=replace(y,".","\\.")
+ s=replace(s,"*",".*")
+ s=concat("^",s,"$")
+ const o=new RegExp(s)
+ return o.test(x)
+}
+function max(...x)
+{
+ return Math.max(...x)
+}
+function merge(x,y)
+{
+ check(is_obj,x)
+ check(is_obj,y)
+ Object.assign(x,y)
+}
+function min(...x)
+{
+ return Math.min(...x)
+}
+function mul(x,y,...z)
+{
+ check(is_num,x)
+ check(is_num,y)
+ const r=x*y
+ if(is_full(z))
+  return mul(r,...z)
+ return r
+}
+function nop()
+{
+}
+function obj_keys(x)
+{
+ check(is_obj,x)
+ return Object.keys(x)
+}
+function obj_vals(x)
+{
+ check(is_obj,x)
+ return Object.values(x)
+}
+function obj()
+{
+ return {}
+}
+function on(x)
+{
+ check(is_fn,x)
+ const fn=x
+ function on_fn()
+ {
+  if(caught)
+   return
+  try
+  {
+   return fn()
+  }
+  catch(e)
+  {
+   caught=true
+   throw e
+  }
+ }
+ check(!caught)
+ return on_fn
+}
+function pad_l(x,y,z)
+{
+ check(is_cool,x)
+ if(is_uint(x))
+ {
+  const s=to_json(x)
+  if(is_undef(y))
+  {
+   if(is_undef(z))
+    return pad_l(s,"0",3)
+   return pad_l(s,"0",z)
+  }
+  return pad_l(s,y,z)
+ }
+ check(is_str,x)
+ check(is_str,y)
+ check(is_uint,z)
+ return x.padStart(z,y)
+}
+function pad_r(x,y,z)
+{
+ check(is_cool,x)
+ if(is_uint(x))
+ {
+  const s=to_json(x)
+  if(is_undef(y))
+  {
+   if(is_undef(z))
+    return pad_r(s,"0",3)
+   return pad_r(s,"0",z)
+  }
+  return pad_r(s,y,z)
+ }
+ check(is_str,x)
+ check(is_str,y)
+ check(is_uint,z)
+ return x.padEnd(z,y)
+}
+function paren(x)
+{
+ check(is_str,x)
+ return concat("(",x,")")
+}
+function pop(x,y)
+{
+ check(is_arr,x)
+ if(is_undef(y))
+  return pop(x,1)
+ check(is_uint,y)
+ const n=sub(x.length,y)
+ if(same(y,1))
+ {
+  const r=back(x)
+  remove(x,n,1)
+  return r
+ }
+ remove(x,n,y)
+}
+function prepend(x,y)
+{
+ check(is_arr,x)
+ check(is_arr,y)
+ const a=dup(y)
+ reverse(a)
+ for(const v of a)
+ {
+  unshift(x,v)
+ }
+}
+function push(x,y)
+{
+ check(is_arr,x)
+ check(is_def,y)
+ x.push(y)
+}
+function put(x,y,z)
+{
+ check(is_obj,x)
+ check(is_str,y)
+ check(is_def,z)
+ if(has(x,y))
+  stop()
+ set(x,y,z)
+}
+function random(x)
+{
+ check(is_num,x)
+ check(gte,x,0)
+ let r=Math.random()
+ r=mul(r,x)
+ if(is_uint(x))
+  return trunc(r)
+ return r
+}
+function reject(x,y)
+{
+ check(is_arr,x)
+ check(is_fn,y)
+ const r=arr()
+ for(const v of x)
+ {
+  if(y(v))
+   continue
+  push(r,v)
+ }
+ return r
+}
+function remove(x,y,z)
+{
+ check(is_arr,x)
+ check(is_uint,y)
+ if(is_undef(z))
+  return remove(x,y,1)
+ check(is_uint,z)
+ check(between,y,0,x.length)
+ const n=add(y,z)
+ check(between,n,0,x.length)
+ x.splice(y,z)
+}
+function repeat(x,y)
+{
+ check(is_str,x)
+ check(is_uint,y)
+ return x.repeat(y)
+}
+function replace_rec(x,y,z)
+{
+ check(is_str,x)
+ check(is_str,y)
+ check(is_str,z)
+ let r=x
+ while(contain(r,y))
+ {
+  r=replace(r,y,z)
+ }
+ return r
+}
+function replace(x,y,z)
+{
+ check(is_str,x)
+ check(is_str,y)
+ check(is_str,z)
+ const a=split(x,y)
+ return join(a,z)
+}
+function reverse(x)
+{
+ check(is_arr,x)
+ x.reverse()
+}
+function round(x)
+{
+ check(is_num,x)
+ return Math.round(x)
+}
+function salt(x,y)
+{
+ check(is_str,x)
+ if(is_undef(y))
+  return salt(x,"azertyuiop")
+ let r=""
+ const a1=explode(x)
+ const a2=explode(y)
+ while(is_full(a1))
+ {
+  if(is_empty(a2))
+  {
+   const a3=explode(y)
+   append(a2,a3)
+  }
+  const c1=shift(a1)
+  const c2=shift(a2)
+  const n1=asc(c1)
+  const n2=asc(c2)
+  const n=n1^n2
+  const c=chr(n)
+  r=concat(r,c)
+ }
+ return r
+}
+function same(x,y)
+{
+ return x===y
+}
+function scan(x,y)
+{
+ check(is_str,x)
+ if(is_undef(y))
+  return scan(x,is_token)
+ check(is_fn,y)
+ function delimit(x)
+ {
+  check(is_str,x)
+  const r=arr()
+  for(const v of x)
+  {
+   const right=v
+   if(is_empty(r))
+   {
+    push(r,right)
+    continue
+   }
+   const left=back(r)
+   const fragment=concat(left,right)
+   if(is_fragment(fragment))
+   {
+    drop(r)
+    push(r,fragment)
+   }
+   else
+    push(r,right)
+  }
+  return r
+ }
+ function group(x,y)
+ {
+  check(is_arr,x)
+  check(is_fn,y)
+  const r=arr()
+  const fragments=dup(x)
+  while(is_full(fragments))
+  {
+   const a=reduce(fragments,y)
+   if(is_full(a))
+   {
+    const s=implode(a)
+    push(r,s)
+    shift(fragments,a.length)
+   }
+   else
+   {
+    const s=shift(fragments)
+    push(r,s)
+   }
+  }
+  return r
+ }
+ function reduce(x)
+ {
+  check(is_arr,x)
+  check(is_fn,y)
+  check(is_full,x)
+  const r=dup(x)
+  while(is_full(r))
+  {
+   const s=implode(r)
+   if(y(s))
+    break
+   drop(r)
+  }
+  return r
+ }
+ const a=delimit(x)
+ return group(a,y)
+}
+function set(x,y,z)
+{
+ check(is_obj,x)
+ check(is_str,y)
+ check(is_def,z)
+ x[y]=z
+}
+function shift(x,y)
+{
+ check(is_arr,x)
+ if(is_undef(y))
+  return shift(x,1)
+ check(is_uint,y)
+ if(same(y,1))
+ {
+  const r=front(x)
+  remove(x,0,1)
+  return r
+ }
+ remove(x,0,y)
+}
+function slice_l(x,y)
+{
+ check(is_vec,x)
+ check(is_uint,y)
+ return slice(x,0,y)
+}
+function slice_r(x,y)
+{
+ check(is_vec,x)
+ check(is_uint,y)
+ const n=sub(x.length,y)
+ return slice(x,n,y)
+}
+function slice(x,y,z)
+{
+ check(is_vec,x)
+ const n1=inc(x.length)
+ check(between,y,0,n1)
+ if(is_undef(z))
+ {
+  const n=sub(x.length,y)
+  return slice(x,y,n)
+ }
+ check(between,z,0,n1)
+ const n2=add(y,z)
+ check(between,n2,0,n1)
+ return x.slice(y,n2)
+}
+function sort(x,y)
+{
+ check(is_arr,x)
+ if(is_undef(y))
+  x.sort()
+ else
+  x.sort(y)
+}
+function split(x,y)
+{
+ check(is_str,x)
+ if(is_undef(y))
+  return split(x,"\n")
+ if(is_empty(x))
+  return arr()
+ return x.split(y)
+}
+function stop()
+{
+ throw new Error("stop")
+}
+function str_indent(x)
+{
+ check(is_str,x)
+ if(is_blank(x))
+  return 0
+ const s=trim_l(x)
+ return sub(x.length,s.length)
+}
+function strip_l(x,y)
+{
+ check(is_str,x)
+ check(is_str,y)
+ if(match_l(x,y))
+ {
+  const n=sub(x.length,y.length)
+  return slice_r(x,n)
+ }
+ return x
+}
+function strip_r(x,y)
+{
+ check(is_str,x)
+ check(is_str,y)
+ if(match_r(x,y))
+ {
+  const n=sub(x.length,y.length)
+  return slice_l(x,n)
+ }
+ return x
+}
+function sub(x,y,...z)
+{
+ check(is_num,x)
+ check(is_num,y)
+ const r=x-y
+ if(is_full(z))
+  return sub(r,...z)
+ return r
+}
+function tail(x,y)
+{
+ check(is_arr,x)
+ check(is_uint,y)
+ if(lt(x.length,y))
+  return dup(x)
+ return slice_r(x,y)
+}
+function time_get()
+{
+ const n=Date.now()
+ return div(n,1000)
+}
+function time_interval(x,y)
+{
+ check(is_fn,x)
+ if(is_undef(y))
+  return time_interval(x,0)
+ check(is_num,y)
+ check(gte,y,0)
+ const fn=x
+ function on_interval()
+ {
+  if(caught)
+   return
+  try
+  {
+   return fn()
+  }
+  catch(e)
+  {
+   caught=true
+   throw e
+  }
+ }
+ check(!caught)
+ const n=mul(y,1000)
+ setInterval(on_interval,n)
+}
+function time_now()
+{
+ const n=time_get()
+ return sub(n,start)
+}
+function time_timeout(x,y)
+{
+ check(is_fn,x)
+ if(is_undef(y))
+  return time_timeout(x,0)
+ check(is_num,y)
+ check(gte,y,0)
+ const fn=x
+ function on_timeout()
+ {
+  if(caught)
+   return
+  try
+  {
+   return fn()
+  }
+  catch(e)
+  {
+   caught=true
+   throw e
+  }
+ }
+ check(!caught)
+ const n=mul(y,1000)
+ setTimeout(on_timeout,n)
+}
+function to_dump(x)
+{
+ check(is_def,x)
+ return JSON.stringify(x,null,1)
+}
+function to_fixed(x,y)
+{
+ check(is_num,x)
+ if(is_undef(y))
+  return to_fixed(x,2)
+ check(is_uint,y)
+ const s=x.toFixed(y)
+ const a=split(s,".")
+ if(is_single(a))
+  return s
+ const integer=front(a)
+ let float=back(a)
+ const digits=explode(float)
+ while(is_full(digits))
+ {
+  const c=back(digits)
+  if(different(c,"0"))
+   break
+  drop(digits)
+ }
+ if(is_empty(digits))
+  return integer
+ float=implode(digits)
+ return concat(integer,".",float)
+}
+function to_i(x)
+{
+ check(is_str,x)
+ return Number.parseInt(x)
+}
+function to_int(x)
+{
+ check(is_str,x)
+ const r=to_num(x)
+ check(is_int,r)
+ return r
+}
+function to_json(x)
+{
+ check(is_def,x)
+ return json_encode(x)
+}
+function to_lit(x)
+{
+ check(is_str,x)
+ return json_encode(x)
+}
+function to_lower(x)
+{
+ check(is_str,x)
+ return x.toLowerCase()
+}
+function to_num(x)
+{
+ check(is_str,x)
+ const r=json_decode(x)
+ check(is_num,r)
+ return r
+}
+function to_uint(x)
+{
+ check(is_str,x)
+ const r=to_int(x)
+ check(is_uint,r)
+ return r
+}
+function to_upper(x)
+{
+ check(is_str,x)
+ return x.toUpperCase()
+}
+function trim_l(x)
+{
+ check(is_str,x)
+ return x.trimStart()
+}
+function trim_r(x)
+{
+ check(is_str,x)
+ return x.trimEnd()
+}
+function trim(x)
+{
+ check(is_str,x)
+ return x.trim()
+}
+function trunc(x)
+{
+ check(is_num,x)
+ return Math.trunc(x)
+}
+function unshift(x,y)
+{
+ check(is_arr,x)
+ check(is_def,y)
+ x.unshift(y)
+}
+function unwrap(x)
+{
+ check(is_str,x)
+ if(is_lit(x))
+  return json_decode(x)
+ return x
+}
+const font="1.5vw monospace"
+function dom_create(x)
+{
+ check(is_str,x)
+ return document.createElement(x)
+}
+function dom_html()
+{
+ const o=document.getElementsByTagName("html")
+ return o.item(o)
+}
+function font_height()
+{
+ const o=measure_text("M")
+ return o.height
+}
+function is_phone()
+{
+ const agent=to_lower(navigator.userAgent)
+ if(contain(agent,"iphone"))
+  return true
+ if(contain(agent,"android"))
+  return true
+ return false
+}
+//~ function measure_text(x)
+//~ {
+ //~ check(is_str,x)
+ //~ const context=canvas.getContext("2d")
+ //~ const o=context.measureText(x)
+ //~ const width=trunc(o.width)
+ //~ const height=add(o.fontBoundingBoxAscent,o.fontBoundingBoxDescent)
+ //~ return {width,height}
+//~ }
+function measure_text(x)
+{
+ check(is_str,x)
+ const o=document.createElement("span")
+ o.innerHTML=x
+ o.style.font=font
+ document.body.appendChild(o)
+ const width=o.offsetWidth
+ const height=o.offsetHeight
+ o.remove()
+ return {width,height}
+}
+function pane_draw(x,y)
+{
+ check(is_obj,x)
+ check(is_obj,y)
+ const context=y.getContext("2d")
+ const _x=x.x
+ const _y=x.y
+ const _width=x.width
+ const _height=x.height
+ context.fillStyle=x.back
+ context.fillRect(_x,_y,_width,_height)
+ context.beginPath()
+ context.strokeStyle=x.fore
+ context.moveTo(_x,_y)
+ context.lineTo(_x+_width,_y)
+ context.lineTo(_x+_width,_y+_height)
+ context.lineTo(_x,_y+_height)
+ context.lineTo(_x,_y)
+ context.stroke()
+ const padding=x.padding
+ const text_height=font_height()
+ context.font=font
+ context.fillStyle=x.fore
+ context.fillText(x.text,_x+padding,_y+padding+text_height)
+ //context.fillText(x.text,_x+padding,_y+padding)
+ for(const v of x.children)
+ {
+  const o=obj()
+  pane_draw(v,y)
+ }
+}
+function pane_fit(x)
+{
+ check(is_obj,x)
+ const o=measure_text(x.text)
+ x.width=2*x.padding+o.width
+ x.height=2*x.padding+o.height
+}
+function pane_init()
+{
+ const x=0
+ const y=0
+ const width=100
+ const height=font_height()
+ const padding=2
+ const fore="lawngreen"
+ const back="black"
+ const text=""
+ const children=arr()
+ return {x,y,width,height,padding,fore,back,text,children}
+}
+function pane_push(x,y)
+{
+ check(is_obj,x)
+ check(is_obj,y)
+ const padding=x.padding
+ const padding2=mul(padding,2)
+ y.x=x.x+padding
+ if(is_empty(x.children))
+  y.y=x.y+padding
+ else
+  y.y=x.y+x.height
+ y.width=sub(y.width,padding2)
+ x.height=add(x.height,y.height)
+ push(x.children,y)
+}
+function init(...x)
+{
+ function spacer()
+ {
+  const r=dom_create("div")
+  r.className="spacer"
+  return r
+ }
+ //head
+ document.title="Un abri pour tous"
+ const html=document.documentElement
+ const body=document.body
+ const collection=html.getElementsByTagName("head")
+ const head=collection.item(0)
+ const link1=dom_create("link")
+ let css="desktop.css"
+ if(is_phone())
+  css="phone.css"
+ link1.setAttribute("href",css)
+ link1.setAttribute("rel","stylesheet")
+ head.append(link1)
+ const link2=dom_create("link")
+ link2.setAttribute("href","common.css")
+ link2.setAttribute("rel","stylesheet")
+ head.append(link2)
+ //title
+ const div1=dom_create("div")
+ const span1=dom_create("span")
+ const span2=dom_create("span")
+ const i1=dom_create("i")
+ const spacer1=spacer()
+ div1.className="pad border"
+ div1.style.backgroundColor="whitesmoke"
+ span1.innerText="Bienvenue sur "
+ i1.innerText="Un abri pour tous "
+ span2.innerText="!"
+ div1.append(span1)
+ div1.append(i1)
+ div1.append(span2)
+ body.append(div1)
+ body.append(spacer1)
+ //table
+ const table1=dom_create("div")
+ const tr1=dom_create("tr")
+ const td1=dom_create("td")
+ const td2=dom_create("td")
+ td1.className="pad-right"
+ tr1.append(td1)
+ tr1.append(td2)
+ table1.append(tr1)
+ body.append(table1)
+ //left
+ const img1=dom_create("img")
+ img1.id="logo"
+ img1.src="tent-bw-512x332.png"
+ td1.append(img1)
+ //right
+ const div2=dom_create("div")
+ const spacer2=spacer()
+ div2.innerText="Que chaque sans-abri.e dispose au moins d'une tente"
+ div2.style.fontWeight="bold"
+ td2.append(div2)
+ td2.append(spacer2)
+ const div3=dom_create("div")
+ const spacer3=spacer()
+ div3.innerText="Chaque nuit, 5000 personnes dorment dehors en région parisienne. Bien que la tente reste un abri précaire, il permet de se protéger des intempéries et d'avoir un peu d'intimité."
+ td2.append(div3)
+ td2.append(spacer3)
+ const div4=dom_create("div")
+ const spacer4=spacer()
+ div4.innerText="Nous collectons des tentes, des couvertures, des sacs de couchage et des bâches pour les distribuer aux personnes sans-abries."
+ td2.append(div4)
+ td2.append(spacer4)
+ const div5=dom_create("div")
+ const span3=dom_create("span")
+ const span4=dom_create("span")
+ const a1=dom_create("a")
+ const spacer5=spacer()
+ const url1="https://www.decathlon.fr/p/tente-de-camping-mh100-2-places/_/R-p-303295"
+ span3.innerText="Pour pouvoir distribuer un nombre suffisant de tentes, nous organisons une cagnotte. Elle permet d'offrir une tente à 10 sans-abris. Chaque tente coûte "
+ a1.innerText="30€"
+ a1.href=url1
+ span4.innerText="."
+ div5.append(span3)
+ div5.append(a1)
+ div5.append(span4)
+ td2.append(div5)
+ td2.append(spacer5)
+ log("ok")
+}
+main()
+</script>

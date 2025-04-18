@@ -1,0 +1,40 @@
+body
+{
+ font-size:1.4vw;
+}
+
+.spacer
+{
+ height:1.4vw;
+}
+
+.pad
+{
+ padding:1.4vw;
+}
+
+.pad-left
+{
+ padding-left:1.4vw;
+}
+
+.pad-right
+{
+ padding-right:1.4vw;
+}
+
+.border
+{
+ border:0.1vw solid gray;
+}
+
+#logo
+{
+ width:20vw;
+}
+
+#pot a
+{
+ padding:2vw;
+ border-radius:1vw;
+}

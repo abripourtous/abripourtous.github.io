@@ -1,0 +1,45 @@
+*
+{
+ text-size-adjust:none;
+}
+
+body
+{
+ font-size:6vw;
+}
+
+.spacer
+{
+ height:6vw;
+}
+
+.pad
+{
+ padding:6vw;
+}
+
+.pad-left
+{
+ padding-left:6vw;
+}
+
+.pad-right
+{
+ padding-right:6vw;
+}
+
+.border
+{
+ border:0.3vw solid gray;
+}
+
+#logo
+{
+ width:45vw;
+}
+
+#pot a
+{
+ padding:6vw;
+ border-radius:3vw;
+}
