@@ -1,0 +1,3716 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+</head>
+<body>
+<script>
+function abs(x)
+{
+ check(is_num,x)
+ return Math.abs(x)
+}
+function add(x,y,...z)
+{
+ check(is_num,x)
+ check(is_num,y)
+ const _=x+y
+ {
+  const r=_
+  {
+   if(is_full(z))
+   {
+    return add(r,...z)
+   }
+   return r
+  }
+ }
+}
+function app_name()
+{
+ if(is_node())
+ {
+  const _=at(process.argv,1)
+  {
+   const file=_
+   {
+    const _=path_file(file)
+    {
+     const file=_
+     {
+      return replace(file,".","-")
+     }
+    }
+   }
+  }
+ }
+ else if(is_browser())
+ {
+  const _=location.hostname
+  {
+   let file=_
+   {
+    const _=path_base(file)
+    {
+     const base=_
+     {
+      if(is_ip(base))
+      {
+       return replace(base,".","-")
+      }
+      const _=path_file(base)
+      {
+       const file=_
+       {
+        return replace(file,".","-")
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+ else
+ {
+  stop()
+ }
+}
+function append(x,y)
+{
+ check(is_arr,x)
+ check(is_arr,y)
+ for(const v of y)
+ {
+  push(x,v)
+ }
+}
+function arr(...x)
+{
+ return [...x]
+}
+function asc(x)
+{
+ check(is_str,x)
+ check(is_single,x)
+ return x.charCodeAt(0)
+}
+function at(x,y,z)
+{
+ check(is_vec,x)
+ check(is_uint,y)
+ const _=dec(x.length)
+ {
+  const n=_
+  {
+   check(between,y,0,n)
+   if(is_undef(z))
+   {
+    return x[y]
+   }
+   x[y]=z
+  }
+ }
+}
+function back(x,y,z)
+{
+ check(is_vec,x)
+ if(is_undef(y))
+ {
+  return back(x,0)
+ }
+ check(is_uint,y)
+ const _=sub(x.length,y)
+ {
+  const n=_
+  {
+   const _=dec(n)
+   {
+    const n=_
+    {
+     if(is_undef(z))
+     {
+      return at(x,n)
+     }
+     at(x,n,z)
+    }
+   }
+  }
+ }
+}
+function backtrace()
+{
+ const _=new Error
+ {
+  const error=_
+  {
+   log(error.stack)
+  }
+ }
+}
+function base36_decode(x)
+{
+ check(is_str,x)
+ const _=""
+ {
+  let r=_
+  {
+   const _=explode(x)
+   {
+    const a=_
+    {
+     while(is_full(a))
+     {
+      const _=slice_l(a,4)
+      {
+       const a2=_
+       {
+        shift(a,4)
+        const _=implode(a2)
+        {
+         const s=_
+         {
+          const _=Number.parseInt(s,36)
+          {
+           const n=_
+           {
+            const _=mul(256,256)
+            {
+             const range=_
+             {
+              check(is_uint,n)
+              check(lte,n,range)
+              const _=chr(n)
+              {
+               const c=_
+               {
+                r=concat(r,c)
+               }
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+     return r
+    }
+   }
+  }
+ }
+}
+function base36_encode(x)
+{
+ check(is_str,x)
+ const _=""
+ {
+  let r=_
+  {
+   for(const v of x)
+   {
+    const _=asc(v)
+    {
+     const s=_
+     {
+      const _=s.toString(36)
+      {
+       const s=_
+       {
+        const _=pad_l(s,"0",4)
+        {
+         const s=_
+         {
+          r=concat(r,s)
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+   return r
+  }
+ }
+}
+function between(x,y,z)
+{
+ check(is_num,x)
+ check(is_num,y)
+ check(is_num,z)
+ check(gte,z,y)
+ if(lt(x,y))
+ {
+  return false
+ }
+ if(gt(x,z))
+ {
+  return false
+ }
+ return true
+}
+function brace(x)
+{
+ check(is_str,x)
+ return concat("{",x,"}")
+}
+function bracket(x)
+{
+ check(is_str,x)
+ return concat("[",x,"]")
+}
+function byte_size(x)
+{
+ check(is_uint,x)
+ check(gte,x,0)
+ const _=1024
+ {
+  const kb=_
+  {
+   const _=mul(1024,kb)
+   {
+    const mb=_
+    {
+     const _=mul(1024,mb)
+     {
+      const gb=_
+      {
+       const _=mul(1024,gb)
+       {
+        const tb=_
+        {
+         if(lt(x,kb))
+         {
+          const _=to_fixed(x)
+          {
+           const s=_
+           {
+            return concat(s,"b")
+           }
+          }
+         }
+         if(lt(x,mb))
+         {
+          const _=div(x,kb)
+          {
+           const s=_
+           {
+            const _=trunc(s)
+            {
+             const s=_
+             {
+              const _=to_fixed(s)
+              {
+               const s=_
+               {
+                return concat(s,"Kb")
+               }
+              }
+             }
+            }
+           }
+          }
+         }
+         if(lt(x,gb))
+         {
+          const _=div(x,mb)
+          {
+           const s=_
+           {
+            const _=trunc(s)
+            {
+             const s=_
+             {
+              const _=to_fixed(s)
+              {
+               const s=_
+               {
+                return concat(s,"Mb")
+               }
+              }
+             }
+            }
+           }
+          }
+         }
+         if(lt(x,tb))
+         {
+          const _=div(x,gb)
+          {
+           const s=_
+           {
+            const _=trunc(s)
+            {
+             const s=_
+             {
+              const _=to_fixed(s)
+              {
+               const s=_
+               {
+                return concat(s,"Gb")
+               }
+              }
+             }
+            }
+           }
+          }
+         }
+         const _=div(x,tb)
+         {
+          const s=_
+          {
+           const _=trunc(s)
+           {
+            const s=_
+            {
+             const _=to_fixed(s)
+             {
+              const s=_
+              {
+               return concat(s,"Tb")
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+}
+function check(x,...y)
+{
+ if(is_true(x))
+ {
+  if(is_empty(y))
+  {
+   return
+  }
+ }
+ else if(is_fn(x))
+ {
+  const _=x(...y)
+  {
+   const b=_
+   {
+    if(is_true(b))
+    {
+     return
+    }
+   }
+  }
+ }
+ stop()
+}
+function chr(x)
+{
+ check(is_uint,x)
+ return String.fromCharCode(x)
+}
+function clear(x)
+{
+ check(is_arr,x)
+ x.splice(0)
+}
+function clone(x)
+{
+ check(is_def,x)
+ return structuredClone(x)
+}
+function cmp(x,y)
+{
+ check(is_def,x)
+ check(is_def,y)
+ if(x>y)
+ {
+  return 1
+ }
+ if(x<y)
+ {
+  return -1
+ }
+ return 0
+}
+function collate(x)
+{
+ check(is_arr,x)
+ function is_delimited(x)
+ {
+  if(same(x,"_"))
+  {
+   return false
+  }
+  if(is_punct(x))
+  {
+   return true
+  }
+  if(is_space(x))
+  {
+   return true
+  }
+  return false
+ }
+ const _=[]
+ {
+  const a=_
+  {
+   for(const v of x)
+   {
+    if(is_empty(a))
+    {
+     push(a,v)
+     continue
+    }
+    const _=back(a)
+    {
+     const left=_
+     {
+      const _=back(left)
+      {
+       const left=_
+       {
+        const _=front(v)
+        {
+         const right=_
+         {
+          if(is_delimited(left))
+          {
+          }
+          else if(is_delimited(right))
+          {
+          }
+          else
+          {
+           push(a,right)
+           continue
+          }
+          const _=concat(left,right)
+          {
+           const s=_
+           {
+            drop(a)
+            push(a,s)
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+   return join(a," ")
+  }
+ }
+}
+function concat(...x)
+{
+ return implode(x)
+}
+function contain(x,y)
+{
+ check(is_vec,x)
+ if(is_str(x))
+ {
+  check(is_str,y)
+ }
+ check(is_def,y)
+ return x.includes(y)
+}
+function date_get(x)
+{
+ if(is_undef(x))
+ {
+  const _=time_get()
+  {
+   const n=_
+   {
+    return date_get(n)
+   }
+  }
+ }
+ check(is_num,x)
+ const _=mul(x,1000)
+ {
+  const n=_
+  {
+   const _=new Date(n)
+   {
+    const o=_
+    {
+     const _=o.getFullYear()
+     {
+      const y=_
+      {
+       const _=o.getMonth()
+       {
+        const m=_
+        {
+         const _=inc(m)
+         {
+          const m=_
+          {
+           const _=pad_l(m,"0",2)
+           {
+            const m=_
+            {
+             const _=o.getDate()
+             {
+              const d=_
+              {
+               const _=pad_l(d,"0",2)
+               {
+                const d=_
+                {
+                 return concat(y,"/",m,"/",d)
+                }
+               }
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+}
+function dec(x)
+{
+ check(is_num,x)
+ return sub(x,1)
+}
+function dedup(x)
+{
+ check(is_arr,x)
+ const _=[]
+ {
+  const r=_
+  {
+   for(const v of x)
+   {
+    if(!contain(r,v))
+    {
+     push(r,v)
+    }
+   }
+   return r
+  }
+ }
+}
+function delimit(x,y)
+{
+ check(is_str,x)
+ if(is_undef(y))
+ {
+  return delimit(x,is_fragment)
+ }
+ check(is_fn,y)
+ const _=[]
+ {
+  const r=_
+  {
+   for(const v of x)
+   {
+    const _=v
+    {
+     const right=_
+     {
+      if(is_empty(r))
+      {
+       push(r,right)
+       continue
+      }
+      const _=back(r)
+      {
+       const left=_
+       {
+        const _=concat(left,right)
+        {
+         const fragment=_
+         {
+          if(is_fragment(fragment))
+          {
+           drop(r)
+           push(r,fragment)
+          }
+          else
+          {
+           push(r,right)
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+   return r
+  }
+ }
+}
+function different(x,y)
+{
+ return x!==y
+}
+function div(x,y,...z)
+{
+ check(is_num,x)
+ check(is_num,y)
+ check(different,y,0)
+ const _=x/y
+ {
+  const r=_
+  {
+   if(is_full(z))
+   {
+    return div(r,...z)
+   }
+   return r
+  }
+ }
+}
+function drop(x,y)
+{
+ check(is_arr,x)
+ if(is_undef(y))
+ {
+  return drop(x,1)
+ }
+ pop(x,y)
+}
+function dump(x)
+{
+ check(is_def,x)
+ if(is_node())
+ {
+  const _=false
+  {
+   const showHidden=_
+   {
+    const _=null
+    {
+     const depth=_
+     {
+      const _=true
+      {
+       const colors=_
+       {
+        const _=null
+        {
+         const maxArrayLength=_
+         {
+          const _={showHidden,depth,colors,maxArrayLength}
+          {
+           const o=_
+           {
+            const _=util.inspect(x,o)
+            {
+             const s=_
+             {
+              log(s)
+             }
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+ else if(is_browser)
+ {
+  const _=to_dump(x)
+  {
+   const s=_
+   {
+    log(s)
+   }
+  }
+ }
+ else
+ {
+  stop()
+ }
+}
+function dup(x)
+{
+ check(is_container,x)
+ if(is_arr(x))
+ {
+  return slice(x,0)
+ }
+ else if(is_obj(x))
+ {
+  const _={}
+  {
+   const r=_
+   {
+    merge(r,x)
+    return r
+   }
+  }
+ }
+ else
+ {
+  stop()
+ }
+}
+function every(x,y)
+{
+ check(is_arr,x)
+ check(is_fn,y)
+ for(const v of x)
+ {
+  if(!y(v))
+  {
+   return false
+  }
+ }
+ return true
+}
+function explode(x)
+{
+ check(is_str,x)
+ const _=[]
+ {
+  const r=_
+  {
+   for(const v of x)
+   {
+    push(r,v)
+   }
+   return r
+  }
+ }
+}
+function extract(x,y)
+{
+ check(is_arr,x)
+ check(is_def,y)
+ const _=false
+ {
+  let r=_
+  {
+   const _=dup(x)
+   {
+    const a=_
+    {
+     clear(x)
+     for(const v of a)
+     {
+      if(same(v,y))
+      {
+       r=true
+      }
+      else
+      {
+       push(x,v)
+      }
+     }
+     return r
+    }
+   }
+  }
+ }
+}
+function find(x,y)
+{
+ check(is_arr,x)
+ check(is_def,y)
+ for(const k in x)
+ {
+  const _=to_i(k)
+  {
+   const i=_
+   {
+    const _=at(x,i)
+    {
+     const v=_
+     {
+      if(same(v,y))
+      {
+       return i
+      }
+     }
+    }
+   }
+  }
+ }
+ return -1
+}
+function front(x)
+{
+ check(is_vec,x)
+ return at(x,0)
+}
+function get(x,y)
+{
+ check(is_obj,x)
+ check(is_str,y)
+ check(has,x,y)
+ return x[y]
+}
+function gt(x,y)
+{
+ check(is_num,x)
+ check(is_num,y)
+ return x>y
+}
+function gte(x,y)
+{
+ check(is_num,x)
+ check(is_num,y)
+ return x>=y
+}
+function has(x,y)
+{
+ check(is_obj,x)
+ check(is_str,y)
+ return y in x
+}
+function head(x,y)
+{
+ check(is_arr,x)
+ check(is_uint,y)
+ if(lt(x.length,y))
+ {
+  return dup(x)
+ }
+ return slice_l(x,y)
+}
+function implode(x)
+{
+ check(is_arr,x)
+ return join(x,"")
+}
+function inc(x)
+{
+ check(is_num,x)
+ return add(x,1)
+}
+function indent(x)
+{
+ check(is_str,x)
+ const _=[]
+ {
+  const a=_
+  {
+   for(const v of split(x))
+   {
+    const _=trim_r(v)
+    {
+     const s=_
+     {
+      if(is_empty(s))
+      {
+       push(a,s)
+      }
+      else
+      {
+       const _=concat(" ",s)
+       {
+        const s=_
+        {
+         push(a,s)
+        }
+       }
+      }
+     }
+    }
+   }
+   return join(a)
+  }
+ }
+}
+function is_access(x)
+{
+ if(!is_str(x))
+ {
+  return false
+ }
+ if(is_empty(x))
+ {
+  return false
+ }
+ const _=split(x,".")
+ {
+  const a=_
+  {
+   if(is_single(a))
+   {
+    return false
+   }
+   return every(a,is_identifier)
+  }
+ }
+}
+function is_alnum(x)
+{
+ if(!is_str(x))
+ {
+  return false
+ }
+ if(is_empty(x))
+ {
+  return false
+ }
+ for(const v of x)
+ {
+  if(same(v,"_"))
+  {
+  }
+  else if(is_alpha(v))
+  {
+  }
+  else if(is_digit(v))
+  {
+  }
+  else
+  {
+   return false
+  }
+ }
+ return true
+}
+function is_alpha(x)
+{
+ if(!is_str(x))
+ {
+  return false
+ }
+ if(is_empty(x))
+ {
+  return false
+ }
+ for(const v of x)
+ {
+  if(is_lower(v))
+  {
+  }
+  else if(is_upper(v))
+  {
+  }
+  else
+  {
+   return false
+  }
+ }
+ return true
+}
+function is_arr(x)
+{
+ return Array.isArray(x)
+}
+function is_blank(x)
+{
+ if(!is_str(x))
+ {
+  return false
+ }
+ if(is_empty(x))
+ {
+  return true
+ }
+ if(is_space(x))
+ {
+  return true
+ }
+ return false
+}
+function is_bool(x)
+{
+ const _=typeof(x)
+ {
+  const s=_
+  {
+   return same(s,"boolean")
+  }
+ }
+}
+function is_browser()
+{
+ try
+ {
+  window
+ }
+ catch
+ {
+  return false
+ }
+ return true
+}
+function is_comment(x)
+{
+ if(!is_ln(x))
+ {
+  return false
+ }
+ return match_l(x,"//")
+}
+function is_container(x)
+{
+ if(is_arr(x))
+ {
+  return true
+ }
+ if(is_obj(x))
+ {
+  return true
+ }
+ return false
+}
+function is_cool(x)
+{
+ if(is_num(x))
+ {
+  return true
+ }
+ if(is_str(x))
+ {
+  return true
+ }
+ return false
+}
+function is_def(x)
+{
+ return !is_undef(x)
+}
+function is_digit(x)
+{
+ if(!is_str(x))
+ {
+  return false
+ }
+ if(is_empty(x))
+ {
+  return false
+ }
+ for(const v of x)
+ {
+  if(!contain(digit,v))
+  {
+   return false
+  }
+ }
+ return true
+}
+function is_empty(x)
+{
+ if(is_vec(x))
+ {
+  return same(x.length,0)
+ }
+ return false
+}
+function is_false(x)
+{
+ return same(x,false)
+}
+function is_fn(x)
+{
+ const _=typeof(x)
+ {
+  const s=_
+  {
+   if(different(s,"function"))
+   {
+    return false
+   }
+   if(same(x.constructor.name,"GeneratorFunction"))
+   {
+    return false
+   }
+   return true
+  }
+ }
+}
+function is_fragment(x)
+{
+ if(!is_str(x))
+ {
+  return true
+ }
+ if(is_alnum(x))
+ {
+  return true
+ }
+ if(is_space(x))
+ {
+  return true
+ }
+ return false
+}
+function is_full(x)
+{
+ if(is_vec(x))
+ {
+  return !is_empty(x)
+ }
+ return false
+}
+function is_gn(x)
+{
+ const _=typeof(x)
+ {
+  const s=_
+  {
+   if(different(s,"function"))
+   {
+    return false
+   }
+   if(different(x.constructor.name,"GeneratorFunction"))
+   {
+    return false
+   }
+   return true
+  }
+ }
+}
+function is_identifier(x)
+{
+ if(!is_str(x))
+ {
+  return false
+ }
+ if(is_empty(x))
+ {
+  return false
+ }
+ const _=front(x)
+ {
+  const s=_
+  {
+   if(same(s,"_"))
+   {
+   }
+   else if(is_alpha(s))
+   {
+   }
+   else
+   {
+    return false
+   }
+   for(const v of x)
+   {
+    if(!is_alnum(v))
+    {
+     return false
+    }
+   }
+   return true
+  }
+ }
+}
+function is_int(x)
+{
+ return Number.isInteger(x)
+}
+function is_ip(x)
+{
+ if(is_ip4(x))
+ {
+  return true
+ }
+ if(is_ip6(x))
+ {
+  return true
+ }
+ return false
+}
+function is_ip4(x)
+{
+ if(!is_str(x))
+ {
+  return false
+ }
+ const _=split(x,".")
+ {
+  const a=_
+  {
+   if(different(a.length,4))
+   {
+    return false
+   }
+   for(const v of a)
+   {
+    if(!is_digit(v))
+    {
+     return false
+    }
+    const _=to_uint(v)
+    {
+     const n=_
+     {
+      if(gt(n,255))
+      {
+       return false
+      }
+     }
+    }
+   }
+   return true
+  }
+ }
+}
+function is_ip6(x)
+{
+ if(!is_str(x))
+ {
+  return false
+ }
+ const _=split(x,":")
+ {
+  const a=_
+  {
+   if(lt(a.length,3))
+   {
+    return false
+   }
+   if(gt(a.length,8))
+   {
+    return false
+   }
+   for(const v of a)
+   {
+    if(is_empty(v))
+    {
+     continue
+    }
+    if(!is_alnum(v))
+    {
+     return false
+    }
+    if(contain(v,"_"))
+    {
+     return false
+    }
+    if(gt(v.length,4))
+    {
+     return false
+    }
+   }
+   return true
+  }
+ }
+}
+function is_json(x)
+{
+ if(!is_str(x))
+ {
+  return false
+ }
+ if(is_empty(x))
+ {
+  return false
+ }
+ try
+ {
+  json_decode(x)
+ }
+ catch
+ {
+  return false
+ }
+ return true
+}
+function is_last(x,y)
+{
+ check(is_arr,x)
+ check(is_uint,y)
+ const _=dec(x.length)
+ {
+  const n=_
+  {
+   return same(n,y)
+  }
+ }
+}
+function is_lisp(x)
+{
+ if(!is_str(x))
+ {
+  return false
+ }
+ const _=split(x,"-")
+ {
+  const a=_
+  {
+   return every(a,is_alnum)
+  }
+ }
+}
+function is_lit_char(x)
+{
+ if(!is_str(x))
+ {
+  return false
+ }
+ if(!match_l(x,"'"))
+ {
+  return false
+ }
+ if(!match_r(x,"'"))
+ {
+  return false
+ }
+ const _=strip_l(x,"'")
+ {
+  const s=_
+  {
+   const _=strip_r(s,"'")
+   {
+    const s=_
+    {
+     if(is_empty(s))
+     {
+      return false
+     }
+     const _=concat("\"",s,"\"")
+     {
+      const s=_
+      {
+       return is_lit(s)
+      }
+     }
+    }
+   }
+  }
+ }
+}
+function is_lit(x)
+{
+ if(!is_str(x))
+ {
+  return false
+ }
+ if(!is_json(x))
+ {
+  return false
+ }
+ const _=json_decode(x)
+ {
+  const v=_
+  {
+   if(!is_str(v))
+   {
+    return false
+   }
+   const _=json_encode(v)
+   {
+    const s=_
+    {
+     return same(s,x)
+    }
+   }
+  }
+ }
+}
+function is_ln(x)
+{
+ if(is_str(x))
+ {
+  return !is_txt(x)
+ }
+ return false
+}
+function is_lower(x)
+{
+ if(!is_str(x))
+ {
+  return false
+ }
+ if(is_empty(x))
+ {
+  return false
+ }
+ for(const v of x)
+ {
+  if(!contain(lower,v))
+  {
+   return false
+  }
+ }
+ return true
+}
+function is_many(x)
+{
+ if(is_vec(x))
+ {
+  return gt(x.length,1)
+ }
+ return false
+}
+function is_member(x)
+{
+ if(!is_str(x))
+ {
+  return false
+ }
+ if(is_empty(x))
+ {
+  return false
+ }
+ if(is_identifier(x))
+ {
+  return true
+ }
+ if(is_lit(x))
+ {
+  return true
+ }
+ return false
+}
+function is_name(x)
+{
+ if(is_identifier(x))
+ {
+  return true
+ }
+ if(is_access(x))
+ {
+  return true
+ }
+ if(is_tuple(x))
+ {
+  return true
+ }
+ return false
+}
+function is_node()
+{
+ return !is_browser()
+}
+function is_noun(x)
+{
+ if(is_identifier(x))
+ {
+  return true
+ }
+ if(is_access(x))
+ {
+  return true
+ }
+ return false
+}
+function is_null(x)
+{
+ return same(x,null)
+}
+function is_num(x)
+{
+ if(Number.isNaN(x))
+ {
+  return false
+ }
+ if(same(x,Number.NEGATIVE_INFINITY))
+ {
+  return false
+ }
+ if(same(x,Number.POSITIVE_INFINITY))
+ {
+  return false
+ }
+ const _=typeof(x)
+ {
+  const s=_
+  {
+   return same(s,"number")
+  }
+ }
+}
+function is_numeric(x)
+{
+ if(!is_str(x))
+ {
+  return false
+ }
+ if(!is_json(x))
+ {
+  return false
+ }
+ const _=json_decode(x)
+ {
+  const v=_
+  {
+   if(!is_num(v))
+   {
+    return false
+   }
+   const _=json_encode(v)
+   {
+    const s=_
+    {
+     return same(s,x)
+    }
+   }
+  }
+ }
+}
+function is_obj(x)
+{
+ if(is_null(x))
+ {
+  return false
+ }
+ const _=typeof(x)
+ {
+  const s=_
+  {
+   return same(s,"object")
+  }
+ }
+}
+function is_pair(x)
+{
+ if(!is_vec(x))
+ {
+  return false
+ }
+ return same(x.length,2)
+}
+function is_punct(x)
+{
+ if(!is_str(x))
+ {
+  return false
+ }
+ if(is_empty(x))
+ {
+  return false
+ }
+ for(const v of x)
+ {
+  if(!contain(punct,v))
+  {
+   return false
+  }
+ }
+ return true
+}
+function is_single(x)
+{
+ if(is_vec(x))
+ {
+  return same(x.length,1)
+ }
+ return false
+}
+function is_space(x)
+{
+ if(!is_str(x))
+ {
+  return false
+ }
+ if(is_empty(x))
+ {
+  return false
+ }
+ const _=trim(x)
+ {
+  const s=_
+  {
+   return is_empty(s)
+  }
+ }
+}
+function is_str(x)
+{
+ const _=typeof(x)
+ {
+  const s=_
+  {
+   return same(s,"string")
+  }
+ }
+}
+function is_token(x)
+{
+ if(is_alnum(x))
+ {
+  return true
+ }
+ if(is_access(x))
+ {
+  return true
+ }
+ if(is_tuple(x))
+ {
+  return true
+ }
+ if(is_numeric(x))
+ {
+  return true
+ }
+ if(is_lit(x))
+ {
+  return true
+ }
+ if(is_lit_char(x))
+ {
+  return true
+ }
+ if(is_comment(x))
+ {
+  return true
+ }
+ return false
+}
+function is_trivia(x)
+{
+ if(!is_str(x))
+ {
+  return false
+ }
+ if(is_space(x))
+ {
+  return true
+ }
+ if(is_comment(x))
+ {
+  return true
+ }
+ return false
+}
+function is_true(x)
+{
+ return same(x,true)
+}
+function is_tuple(x)
+{
+ if(!is_str(x))
+ {
+  return false
+ }
+ if(is_empty(x))
+ {
+  return false
+ }
+ const _=scan(x,is_member,is_word)
+ {
+  const a=_
+  {
+   if(is_single(a))
+   {
+    return false
+   }
+   for(const v of a)
+   {
+    if(is_member(v))
+    {
+     continue
+    }
+    if(same(v,":"))
+    {
+     continue
+    }
+    return false
+   }
+   return true
+  }
+ }
+}
+function is_txt(x)
+{
+ if(is_str(x))
+ {
+  return contain(x,"\n")
+ }
+ return false
+}
+function is_uint(x)
+{
+ if(is_int(x))
+ {
+  return gte(x,0)
+ }
+ return false
+}
+function is_undef(x)
+{
+ return same(x,undefined)
+}
+function is_upper(x)
+{
+ if(!is_str(x))
+ {
+  return false
+ }
+ if(is_empty(x))
+ {
+  return false
+ }
+ for(const v of x)
+ {
+  if(!contain(upper,v))
+  {
+   return false
+  }
+ }
+ return true
+}
+function is_url(x)
+{
+ if(!is_ln(x))
+ {
+  return false
+ }
+ if(match_l(x,"http://"))
+ {
+  return true
+ }
+ if(match_l(x,"https://"))
+ {
+  return true
+ }
+ return false
+}
+function is_vec(x)
+{
+ if(is_str(x))
+ {
+  return true
+ }
+ if(is_arr(x))
+ {
+  return true
+ }
+ return false
+}
+function is_word(x)
+{
+ if(!is_str(x))
+ {
+  return false
+ }
+ if(is_empty(x))
+ {
+  return false
+ }
+ if(contain(x," "))
+ {
+  return false
+ }
+ if(contain(x,"\n"))
+ {
+  return false
+ }
+ if(contain(x,"\r"))
+ {
+  return false
+ }
+ return true
+}
+function join(x,y)
+{
+ check(is_arr,x)
+ if(is_undef(y))
+ {
+  return join(x,"\n")
+ }
+ check(is_str,y)
+ return x.join(y)
+}
+function json_decode(x)
+{
+ check(is_str,x)
+ return JSON.parse(x)
+}
+function json_encode(x)
+{
+ check(is_def,x)
+ return JSON.stringify(x)
+}
+function log(...x)
+{
+ console.log(...x)
+}
+function lt(x,y)
+{
+ check(is_num,x)
+ check(is_num,y)
+ return x<y
+}
+function lte(x,y)
+{
+ check(is_num,x)
+ check(is_num,y)
+ return x<=y
+}
+function main()
+{
+ function pump(...x)
+ {
+  if(is_fn(init))
+  {
+   init(...x)
+   profile()
+  }
+  else if(is_gn(init))
+  {
+   const _=init(...x)
+   {
+    const generator=_
+    {
+     function on_timer()
+     {
+      const _=generator.next()
+      {
+       const iterator=_
+       {
+        if(iterator.done)
+        {
+         profile()
+         return
+        }
+        time_timeout(on_timer)
+       }
+      }
+     }
+     on_timer()
+    }
+   }
+  }
+ }
+ function profile()
+ {
+  const _=time_now()
+  {
+   const n=_
+   {
+    const _=app_name()
+    {
+     const name=_
+     {
+      const _=to_fixed(n)
+      {
+       const s=_
+       {
+        const _=concat(s,"s")
+        {
+         const s=_
+         {
+          log("profile",name,s)
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+ function get_fns()
+ {
+  const _=null
+  {
+   let content=_
+   {
+    if(is_node())
+    {
+     const _=at(process.argv,1)
+     {
+      const script=_
+      {
+       content=file_read(script)
+      }
+     }
+    }
+    else if(is_browser())
+    {
+     const _=dom_html()
+     {
+      const html=_
+      {
+       content=html.innerHTML
+      }
+     }
+    }
+    else
+    {
+     stop()
+    }
+    for(const v of punct)
+    {
+     content=replace(content,v," ")
+    }
+    const _=replace(content,"\n"," ")
+    {
+     const words=_
+     {
+      const _=replace_rec(content,"  "," ")
+      {
+       const words=_
+       {
+        const _=split(content," ")
+        {
+         const words=_
+         {
+          const _={}
+          {
+           const o=_
+           {
+            for(const v of words)
+            {
+             const _=v
+             {
+              const k=_
+              {
+               if(has(o,k))
+               {
+                continue
+               }
+               if(!is_identifier(k))
+               {
+                continue
+               }
+               const _=null
+               {
+                let v=_
+                {
+                 try
+                 {
+                  v=eval(k)
+                 }
+                 catch
+                 {
+                 }
+                 if(!is_fn(v))
+                 {
+                  continue
+                 }
+                 put(o,k,v)
+                }
+               }
+              }
+             }
+            }
+            return sort(o)
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+ if(is_browser())
+ {
+  window.global=window
+ }
+ global.caught=false
+ global.start=time_get()
+ global.punct="!\"#$%&'()*+,-./:;<=>?@[\\]^`{|}~"
+ global.digit="0123456789"
+ global.lower="abcdefghijklmnopqrstuvwxyz"
+ global.upper=to_upper(lower)
+ if(is_node())
+ {
+  global.cp=require("child_process")
+  global.fs=require("fs")
+  global.http=require("http")
+  global.os=require("os")
+  global.path=require("path")
+  global.util=require("util")
+ }
+ else if(is_browser())
+ {
+  global.body=document.body
+  global.font="1.5vw monospace"
+ }
+ else
+ {
+  stop()
+ }
+ global.fns=get_fns()
+ for(const k in fns)
+ {
+  if(match(k,"init_*"))
+  {
+   const _=get(fns,k)
+   {
+    const v=_
+    {
+     v()
+    }
+   }
+  }
+ }
+ if(is_node())
+ {
+  const _=slice(process.argv,2)
+  {
+   const args=_
+   {
+    pump(...args)
+   }
+  }
+ }
+ else if(is_browser())
+ {
+  function on_load()
+  {
+   if(same(document.readyState,"complete"))
+   {
+    pump()
+    window.onload=null
+   }
+  }
+  window.onload=on(on_load)
+ }
+ else
+ {
+  stop()
+ }
+}
+function map(x,y)
+{
+ check(is_arr,x)
+ check(is_fn,y)
+ const _=[]
+ {
+  const r=_
+  {
+   for(const v of x)
+   {
+    const _=y(v)
+    {
+     const v=_
+     {
+      check(is_def,v)
+      push(r,v)
+     }
+    }
+   }
+   return r
+  }
+ }
+}
+function match_l(x,y)
+{
+ check(is_str,x)
+ check(is_str,y)
+ if(is_empty(x))
+ {
+  return false
+ }
+ if(is_empty(y))
+ {
+  return false
+ }
+ if(gt(y.length,x.length))
+ {
+  return false
+ }
+ const _=slice_l(x,y.length)
+ {
+  const s=_
+  {
+   return same(s,y)
+  }
+ }
+}
+function match_r(x,y)
+{
+ check(is_str,x)
+ check(is_str,y)
+ if(is_empty(x))
+ {
+  return false
+ }
+ if(is_empty(y))
+ {
+  return false
+ }
+ if(gt(y.length,x.length))
+ {
+  return false
+ }
+ const _=slice_r(x,y.length)
+ {
+  const s=_
+  {
+   return same(s,y)
+  }
+ }
+}
+function match(x,y)
+{
+ check(is_str,x)
+ check(is_str,y)
+ const _=replace(y,".","\\.")
+ {
+  const s=_
+  {
+   const _=replace(s,"*",".*")
+   {
+    const s=_
+    {
+     const _=concat("^",s,"$")
+     {
+      const s=_
+      {
+       const _=new RegExp(s)
+       {
+        const s=_
+        {
+         return s.test(x)
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+}
+function max(...x)
+{
+ return Math.max(...x)
+}
+function merge(x,y)
+{
+ check(is_obj,x)
+ check(is_obj,y)
+ Object.assign(x,y)
+}
+function min(...x)
+{
+ return Math.min(...x)
+}
+function mul(x,y,...z)
+{
+ check(is_num,x)
+ check(is_num,y)
+ const _=x*y
+ {
+  const r=_
+  {
+   if(is_full(z))
+   {
+    return mul(r,...z)
+   }
+   return r
+  }
+ }
+}
+function nop()
+{
+}
+function obj_keys(x)
+{
+ check(is_obj,x)
+ return Object.keys(x)
+}
+function obj_length(x)
+{
+ check(is_obj,x)
+ const _=obj_keys(x)
+ {
+  const keys=_
+  {
+   return keys.length
+  }
+ }
+}
+function obj_vals(x)
+{
+ check(is_obj,x)
+ return Object.values(x)
+}
+function obj()
+{
+ return {}
+}
+function on(x)
+{
+ check(is_fn,x)
+ const _=x
+ {
+  const fn=_
+  {
+   function on_fn(...x)
+   {
+    if(caught)
+    {
+     return
+    }
+    try
+    {
+     return fn(...x)
+    }
+    catch(e)
+    {
+     caught=true
+     throw e
+    }
+   }
+   if(caught)
+   {
+    stop()
+   }
+   return on_fn
+  }
+ }
+}
+function pad_l(x,y,z)
+{
+ check(is_cool,x)
+ if(is_uint(x))
+ {
+  const _=to_json(x)
+  {
+   const s=_
+   {
+    if(is_undef(y))
+    {
+     if(is_undef(z))
+     {
+      return pad_l(s,"0",3)
+     }
+     return pad_l(s,"0",z)
+    }
+    return pad_l(s,y,z)
+   }
+  }
+ }
+ check(is_str,x)
+ check(is_str,y)
+ check(is_uint,z)
+ return x.padStart(z,y)
+}
+function pad_r(x,y,z)
+{
+ check(is_cool,x)
+ if(is_uint(x))
+ {
+  const _=to_json(x)
+  {
+   const s=_
+   {
+    if(is_undef(y))
+    {
+     if(is_undef(z))
+     {
+      return pad_r(s,"0",3)
+     }
+     return pad_r(s,"0",z)
+    }
+    return pad_r(s,y,z)
+   }
+  }
+ }
+ check(is_str,x)
+ check(is_str,y)
+ check(is_uint,z)
+ return x.padEnd(z,y)
+}
+function paren(x)
+{
+ check(is_str,x)
+ return concat("(",x,")")
+}
+function path_concat(x,y)
+{
+ const _=strip_r(x,"/")
+ {
+  const x=_
+  {
+   const _=strip_l(y,"/")
+   {
+    const y=_
+    {
+     return concat(x,"/",y)
+    }
+   }
+  }
+ }
+}
+function path_file(x)
+{
+ check(is_str,x)
+ const _=path_base(x)
+ {
+  const s=_
+  {
+   const _=split(s,".")
+   {
+    const a=_
+    {
+     if(is_single(a))
+     {
+      return s
+     }
+     drop(a)
+     return join(a,".")
+    }
+   }
+  }
+ }
+}
+function path_fix(x)
+{
+ if(match_r(x,"/"))
+ {
+  return x
+ }
+ return concat(x,"/")
+}
+function pop(x,y)
+{
+ check(is_arr,x)
+ if(is_undef(y))
+ {
+  return pop(x,1)
+ }
+ check(is_uint,y)
+ const _=sub(x.length,y)
+ {
+  const n=_
+  {
+   if(same(y,1))
+   {
+    const _=back(x)
+    {
+     const r=_
+     {
+      remove(x,n,1)
+      return r
+     }
+    }
+   }
+   remove(x,n,y)
+  }
+ }
+}
+function prepend(x,y)
+{
+ check(is_arr,x)
+ check(is_arr,y)
+ const _=dup(y)
+ {
+  const a=_
+  {
+   reverse(a)
+   for(const v of a)
+   {
+    unshift(x,v)
+   }
+  }
+ }
+}
+function push(x,y)
+{
+ check(is_arr,x)
+ check(is_def,y)
+ x.push(y)
+}
+function put(x,y,z)
+{
+ check(is_obj,x)
+ check(is_str,y)
+ check(is_def,z)
+ if(has(x,y))
+ {
+  stop()
+ }
+ set(x,y,z)
+}
+function random(x)
+{
+ if(is_undef(x))
+ {
+  return random(Number.MAX_SAFE_INTEGER)
+ }
+ check(is_num,x)
+ check(gte,x,0)
+ const _=Math.random()
+ {
+  const r=_
+  {
+   const _=mul(r,x)
+   {
+    const r=_
+    {
+     if(is_uint(x))
+     {
+      return trunc(r)
+     }
+     return r
+    }
+   }
+  }
+ }
+}
+function reject(x,y)
+{
+ check(is_arr,x)
+ check(is_fn,y)
+ const _=[]
+ {
+  const r=_
+  {
+   for(const v of x)
+   {
+    if(y(v))
+    {
+     continue
+    }
+    push(r,v)
+   }
+   return r
+  }
+ }
+}
+function remove(x,y,z)
+{
+ check(is_arr,x)
+ check(is_uint,y)
+ if(is_undef(z))
+ {
+  return remove(x,y,1)
+ }
+ check(is_uint,z)
+ check(between,y,0,x.length)
+ const _=add(y,z)
+ {
+  const n=_
+  {
+   check(between,n,0,x.length)
+   x.splice(y,z)
+  }
+ }
+}
+function repeat(x,y)
+{
+ check(is_str,x)
+ check(is_uint,y)
+ return x.repeat(y)
+}
+function replace_rec(x,y,z)
+{
+ check(is_str,x)
+ check(is_str,y)
+ check(is_str,z)
+ const _=x
+ {
+  let r=_
+  {
+   while(contain(r,y))
+   {
+    r=replace(r,y,z)
+   }
+   return r
+  }
+ }
+}
+function replace(x,y,z)
+{
+ check(is_str,x)
+ check(is_str,y)
+ check(is_str,z)
+ const _=split(x,y)
+ {
+  const a=_
+  {
+   return join(a,z)
+  }
+ }
+}
+function reverse(x)
+{
+ check(is_arr,x)
+ x.reverse()
+}
+function round(x)
+{
+ check(is_num,x)
+ return Math.round(x)
+}
+function salt(x,y)
+{
+ check(is_str,x)
+ if(is_undef(y))
+ {
+  return salt(x,"azertyuiop")
+ }
+ const _=""
+ {
+  let r=_
+  {
+   const _=explode(x)
+   {
+    const a1=_
+    {
+     const _=explode(y)
+     {
+      const a2=_
+      {
+       while(is_full(a1))
+       {
+        if(is_empty(a2))
+        {
+         const _=explode(y)
+         {
+          const a=_
+          {
+           append(a2,a)
+          }
+         }
+        }
+        const _=shift(a1)
+        {
+         const c1=_
+         {
+          const _=shift(a2)
+          {
+           const c2=_
+           {
+            const _=asc(c1)
+            {
+             const n1=_
+             {
+              const _=asc(c2)
+              {
+               const n2=_
+               {
+                const _=xor(n1,n2)
+                {
+                 const n=_
+                 {
+                  const _=chr(n)
+                  {
+                   const c=_
+                   {
+                    r=concat(r,c)
+                   }
+                  }
+                 }
+                }
+               }
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+       }
+       return r
+      }
+     }
+    }
+   }
+  }
+ }
+}
+function same(x,y)
+{
+ return x===y
+}
+function scan(x,y,z)
+{
+ check(is_str,x)
+ if(is_undef(y))
+ {
+  return scan(x,is_token)
+ }
+ check(is_fn,y)
+ if(is_undef(z))
+ {
+  return scan(x,y,is_fragment)
+ }
+ check(is_fn,z)
+ function delimit(x)
+ {
+  check(is_str,x)
+  const _=[]
+  {
+   const r=_
+   {
+    for(const v of x)
+    {
+     const _=v
+     {
+      const right=_
+      {
+       if(is_empty(r))
+       {
+        push(r,right)
+        continue
+       }
+       const _=back(r)
+       {
+        const left=_
+        {
+         const _=concat(left,right)
+         {
+          const fragment=_
+          {
+           if(is_fragment(fragment))
+           {
+            drop(r)
+            push(r,fragment)
+           }
+           else
+           {
+            push(r,right)
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+    return r
+   }
+  }
+ }
+ function group(x,y)
+ {
+  check(is_arr,x)
+  check(is_fn,y)
+  const _=[]
+  {
+   const r=_
+   {
+    const _=dup(x)
+    {
+     const fragments=_
+     {
+      while(is_full(fragments))
+      {
+       const _=reduce(fragments,y)
+       {
+        const a=_
+        {
+         if(is_full(a))
+         {
+          const _=implode(a)
+          {
+           const s=_
+           {
+            push(r,s)
+            shift(fragments,a.length)
+           }
+          }
+         }
+         else
+         {
+          const _=shift(fragments)
+          {
+           const s=_
+           {
+            push(r,s)
+           }
+          }
+         }
+        }
+       }
+      }
+      return r
+     }
+    }
+   }
+  }
+ }
+ function reduce(x)
+ {
+  check(is_arr,x)
+  check(is_fn,y)
+  check(is_full,x)
+  const _=dup(x)
+  {
+   const r=_
+   {
+    while(is_full(r))
+    {
+     const _=implode(r)
+     {
+      const s=_
+      {
+       if(y(s))
+       {
+        break
+       }
+       drop(r)
+      }
+     }
+    }
+    return r
+   }
+  }
+ }
+ const _=delimit(x,z)
+ {
+  const a=_
+  {
+   return group(a,y)
+  }
+ }
+}
+function set(x,y,z)
+{
+ check(is_obj,x)
+ check(is_str,y)
+ check(is_def,z)
+ x[y]=z
+}
+function shift(x,y)
+{
+ check(is_arr,x)
+ if(is_undef(y))
+ {
+  return shift(x,1)
+ }
+ check(is_uint,y)
+ if(same(y,1))
+ {
+  const _=front(x)
+  {
+   const r=_
+   {
+    remove(x,0,1)
+    return r
+   }
+  }
+ }
+ remove(x,0,y)
+}
+function slice_l(x,y)
+{
+ check(is_vec,x)
+ check(is_uint,y)
+ return slice(x,0,y)
+}
+function slice_r(x,y)
+{
+ check(is_vec,x)
+ check(is_uint,y)
+ const _=sub(x.length,y)
+ {
+  const n=_
+  {
+   return slice(x,n,y)
+  }
+ }
+}
+function slice(x,y,z)
+{
+ check(is_vec,x)
+ const _=inc(x.length)
+ {
+  const n1=_
+  {
+   check(between,y,0,n1)
+   if(is_undef(z))
+   {
+    const _=sub(x.length,y)
+    {
+     const n=_
+     {
+      return slice(x,y,n)
+     }
+    }
+   }
+   check(between,z,0,n1)
+   const _=add(y,z)
+   {
+    const n2=_
+    {
+     check(between,n2,0,n1)
+     return x.slice(y,n2)
+    }
+   }
+  }
+ }
+}
+function sort(x,y)
+{
+ check(is_container,x)
+ if(is_arr(x))
+ {
+  if(is_undef(y))
+  {
+   x.sort()
+  }
+  else
+  {
+   x.sort(y)
+  }
+ }
+ else if(is_obj(x))
+ {
+  function compare(x,y)
+  {
+   check(is_obj,x)
+   check(is_obj,x)
+   const _=cmp(x.key,y.key)
+   {
+    const r=_
+    {
+     if(same(r,0))
+     {
+      const _=cmp(x.value,y.value)
+      {
+       const r=_
+       {
+        return r
+       }
+      }
+     }
+     return r
+    }
+   }
+  }
+  if(is_undef(y))
+  {
+   return sort(x,compare)
+  }
+  const _={}
+  {
+   const r=_
+   {
+    const _=[]
+    {
+     const a=_
+     {
+      for(const k in x)
+      {
+       const _=k
+       {
+        const key=_
+        {
+         const _=get(x,k)
+         {
+          const value=_
+          {
+           const _={key,value}
+           {
+            const o=_
+            {
+             push(a,o)
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+      sort(a,y)
+      for(const v of a)
+      {
+       const _=v.key
+       {
+        const k=_
+        {
+         put(r,v.key,v.value)
+        }
+       }
+      }
+      return r
+     }
+    }
+   }
+  }
+ }
+}
+function space(...x)
+{
+ return join(x," ")
+}
+function split(x,y)
+{
+ check(is_str,x)
+ if(is_undef(y))
+ {
+  return split(x,"\n")
+ }
+ if(is_empty(x))
+ {
+  return []
+ }
+ return x.split(y)
+}
+function stop()
+{
+ throw new Error("stop")
+}
+function str_indent(x)
+{
+ check(is_str,x)
+ if(is_blank(x))
+ {
+  return 0
+ }
+ const _=trim_l(x)
+ {
+  const s=_
+  {
+   return sub(x.length,s.length)
+  }
+ }
+}
+function strip_l(x,y)
+{
+ check(is_str,x)
+ check(is_str,y)
+ if(match_l(x,y))
+ {
+  const _=sub(x.length,y.length)
+  {
+   const n=_
+   {
+    return slice_r(x,n)
+   }
+  }
+ }
+ return x
+}
+function strip_r(x,y)
+{
+ check(is_str,x)
+ check(is_str,y)
+ if(match_r(x,y))
+ {
+  const _=sub(x.length,y.length)
+  {
+   const n=_
+   {
+    return slice_l(x,n)
+   }
+  }
+ }
+ return x
+}
+function sub(x,y,...z)
+{
+ check(is_num,x)
+ check(is_num,y)
+ const _=x-y
+ {
+  const r=_
+  {
+   if(is_full(z))
+   {
+    return sub(r,...z)
+   }
+   return r
+  }
+ }
+}
+function tail(x,y)
+{
+ check(is_arr,x)
+ check(is_uint,y)
+ if(lt(x.length,y))
+ {
+  return dup(x)
+ }
+ return slice_r(x,y)
+}
+function time_get()
+{
+ const _=Date.now()
+ {
+  const n=_
+  {
+   return div(n,1000)
+  }
+ }
+}
+function time_hn(x)
+{
+ check(is_int,x)
+ function get_unit(x)
+ {
+  check(is_num,x)
+  const _=60
+  {
+   const minute=_
+   {
+    const _=mul(60,minute)
+    {
+     const hour=_
+     {
+      const _=mul(24,hour)
+      {
+       const day=_
+       {
+        const _=mul(30,day)
+        {
+         const month=_
+         {
+          const _=mul(12,month)
+          {
+           const year=_
+           {
+            if(lt(x,10))
+            {
+             const _=to_fixed(x)
+             {
+              const n=_
+              {
+               return concat(n,"s")
+              }
+             }
+            }
+            if(lt(x,minute))
+            {
+             const _=trunc(x)
+             {
+              const n=_
+              {
+               return concat(n,"s")
+              }
+             }
+            }
+            if(lt(x,hour))
+            {
+             const _=div(x,minute)
+             {
+              const n=_
+              {
+               const _=trunc(n)
+               {
+                const n=_
+                {
+                 return concat(n,"m")
+                }
+               }
+              }
+             }
+            }
+            if(lt(x,day))
+            {
+             const _=div(x,hour)
+             {
+              const n=_
+              {
+               const _=trunc(n)
+               {
+                const n=_
+                {
+                 return concat(n,"h")
+                }
+               }
+              }
+             }
+            }
+            if(lt(x,month))
+            {
+             const _=div(x,day)
+             {
+              const n=_
+              {
+               const _=trunc(n)
+               {
+                const n=_
+                {
+                 return concat(n,"d")
+                }
+               }
+              }
+             }
+            }
+            if(lt(x,year))
+            {
+             const _=div(x,month)
+             {
+              const n=_
+              {
+               const _=trunc(n)
+               {
+                const n=_
+                {
+                 return concat(n,"m")
+                }
+               }
+              }
+             }
+            }
+            const _=div(x,year)
+            {
+             const n=_
+             {
+              const _=trunc(n)
+              {
+               const n=_
+               {
+                return concat(n,"y")
+               }
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+ const _=time_get()
+ {
+  const now=_
+  {
+   if(same(x,now))
+   {
+    return "now"
+   }
+   if(gt(x,now))
+   {
+    const _=sub(x,now)
+    {
+     const n=_
+     {
+      const _=get_unit(n)
+      {
+       const s=_
+       {
+        return concat("in ",s)
+       }
+      }
+     }
+    }
+   }
+   const _=sub(now,x)
+   {
+    const n=_
+    {
+     const _=get_unit(n)
+     {
+      const s=_
+      {
+       return concat(s," ago")
+      }
+     }
+    }
+   }
+  }
+ }
+}
+function time_interval(x,y)
+{
+ check(is_fn,x)
+ if(is_undef(y))
+ {
+  return time_timeout(x,0)
+ }
+ check(is_uint,y)
+ const _=on(x)
+ {
+  const fn=_
+  {
+   const _=mul(y,1000)
+   {
+    const n=_
+    {
+     setInterval(fn,n)
+    }
+   }
+  }
+ }
+}
+function time_now()
+{
+ const _=time_get()
+ {
+  const n=_
+  {
+   return sub(n,start)
+  }
+ }
+}
+function time_timeout(x,y)
+{
+ check(is_fn,x)
+ if(is_undef(y))
+ {
+  return time_timeout(x,0)
+ }
+ check(is_num,y)
+ const _=on(x)
+ {
+  const fn=_
+  {
+   const _=mul(y,1000)
+   {
+    const n=_
+    {
+     setTimeout(fn,n)
+    }
+   }
+  }
+ }
+}
+function to_dump(x)
+{
+ check(is_def,x)
+ return JSON.stringify(x,null,1)
+}
+function to_fixed(x,y)
+{
+ check(is_num,x)
+ if(is_undef(y))
+ {
+  return to_fixed(x,2)
+ }
+ check(is_uint,y)
+ const _=x.toFixed(y)
+ {
+  const a=_
+  {
+   const _=split(a,".")
+   {
+    const a=_
+    {
+     if(is_single(a))
+     {
+      return s
+     }
+     const _=front(a)
+     {
+      const integer=_
+      {
+       const _=back(a)
+       {
+        let float=_
+        {
+         const _=explode(float)
+         {
+          const digits=_
+          {
+           while(is_full(digits))
+           {
+            const _=back(digits)
+            {
+             const c=_
+             {
+              if(different(c,"0"))
+              {
+               break
+              }
+              drop(digits)
+             }
+            }
+           }
+           if(is_empty(digits))
+           {
+            return integer
+           }
+           float=implode(digits)
+           return concat(integer,".",float)
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+}
+function to_i(x)
+{
+ check(is_str,x)
+ return Number.parseInt(x)
+}
+function to_int(x)
+{
+ check(is_str,x)
+ const _=to_num(x)
+ {
+  const r=_
+  {
+   check(is_int,r)
+   return r
+  }
+ }
+}
+function to_json(x)
+{
+ check(is_def,x)
+ return json_encode(x)
+}
+function to_lit(x)
+{
+ check(is_str,x)
+ return json_encode(x)
+}
+function to_lower(x)
+{
+ check(is_str,x)
+ return x.toLowerCase()
+}
+function to_num(x)
+{
+ check(is_str,x)
+ const _=json_decode(x)
+ {
+  const r=_
+  {
+   check(is_num,r)
+   return r
+  }
+ }
+}
+function to_uint(x)
+{
+ check(is_str,x)
+ const _=to_int(x)
+ {
+  const r=_
+  {
+   check(is_uint,r)
+   return r
+  }
+ }
+}
+function to_upper(x)
+{
+ check(is_str,x)
+ return x.toUpperCase()
+}
+function trim_l(x)
+{
+ check(is_str,x)
+ return x.trimStart()
+}
+function trim_r(x)
+{
+ check(is_str,x)
+ return x.trimEnd()
+}
+function trim(x)
+{
+ check(is_str,x)
+ return x.trim()
+}
+function trunc(x)
+{
+ check(is_num,x)
+ return Math.trunc(x)
+}
+function unshift(x,y)
+{
+ check(is_arr,x)
+ check(is_def,y)
+ x.unshift(y)
+}
+function unwrap(x)
+{
+ check(is_str,x)
+ if(is_lit(x))
+ {
+  return json_decode(x)
+ }
+ if(is_access(x))
+ {
+  return split(x,".")
+ }
+ if(is_tuple(x))
+ {
+  const _=[]
+  {
+   const r=_
+   {
+    for(const v of scan(x,is_member,is_word))
+    {
+     if(is_member(v))
+     {
+      push(r,v)
+     }
+     else if(same(v,":"))
+     {
+     }
+     else
+     {
+      stop()
+     }
+    }
+    return r
+   }
+  }
+ }
+ stop()
+}
+function xor(x,y,...z)
+{
+ check(is_num,x)
+ check(is_num,y)
+ const _=x^y
+ {
+  const r=_
+  {
+   if(is_full(z))
+   {
+    return xor(r,...z)
+   }
+   return r
+  }
+ }
+}
+function dom_html()
+{
+ return document.documentElement
+}
+function dom_init(x)
+{
+ check(is_str,x)
+ return document.createElement(x)
+}
+function is_phone()
+{
+ const _=to_lower(navigator.userAgent)
+ {
+  const agent=_
+  {
+   if(contain(agent,"iphone"))
+   {
+    return true
+   }
+   if(contain(agent,"android"))
+   {
+    return true
+   }
+   return false
+  }
+ }
+}
+function path_base(x)
+{
+ check(is_str,x)
+ const _=split(x,"/")
+ {
+  const a=_
+  {
+   return back(a)
+  }
+ }
+}
+function* xhr_load(x)
+{
+ check(is_str,x)
+ const _=new XMLHttpRequest
+ {
+  const xhr=_
+  {
+   const _=null
+   {
+    let result=_
+    {
+     const _=false
+     {
+      let done=_
+      {
+       function on_load()
+       {
+        const _=xhr.response
+        {
+         const response=_
+         {
+          if(is_json(response))
+          {
+           result=json_decode(response)
+          }
+          else
+          {
+           result=response
+          }
+          done=true
+         }
+        }
+       }
+       xhr.onload=on(on_load)
+       xhr.open("get",x)
+       xhr.send()
+       while(true)
+       {
+        if(done)
+        {
+         break
+        }
+        yield
+       }
+       return result
+      }
+     }
+    }
+   }
+  }
+ }
+}
+function* init(...x)
+{
+ function spacer()
+ {
+  const _=dom_init("div")
+  {
+   const r=_
+   {
+    r.className="spacer"
+    return r
+   }
+  }
+ }
+ function on_pot()
+ {
+  location.href="https://leetchi.com/fr/c/un-abri-pour-tous-8264014"
+ }
+ function is_mobile()
+ {
+  if(is_phone())
+  {
+   return true
+  }
+  const _=new URL(location.href)
+  {
+   const url=_
+   {
+    const _=url.searchParams
+    {
+     const params=_
+     {
+      return params.has("mobile")
+     }
+    }
+   }
+  }
+ }
+ document.title="Un abri pour tous"
+ const _=dom_html()
+ {
+  const html=_
+  {
+   const _=html.getElementsByTagName("head")
+   {
+    const collection=_
+    {
+     const _=collection.item(0)
+     {
+      const head=_
+      {
+       const _=dom_init("link")
+       {
+        const link=_
+        {
+         link.setAttribute("href","common.css")
+         link.setAttribute("rel","stylesheet")
+         head.append(link)
+         const _="desktop"
+         {
+          let device=_
+          {
+           if(is_mobile())
+           {
+            device="phone"
+           }
+           const _=concat(device,".css")
+           {
+            const css=_
+            {
+             const _=dom_init("link")
+             {
+              const link=_
+              {
+               link.setAttribute("href",css)
+               link.setAttribute("rel","stylesheet")
+               head.append(link)
+               const _=dom_init("div")
+               {
+                const div=_
+                {
+                 const _=dom_init("span")
+                 {
+                  const span1=_
+                  {
+                   const _=dom_init("span")
+                   {
+                    const span2=_
+                    {
+                     const _=dom_init("i")
+                     {
+                      const i=_
+                      {
+                       const _=spacer()
+                       {
+                        const spacer=_
+                        {
+                         div.className="pad border background-gray"
+                         span1.innerText="Bienvenue sur "
+                         i.innerText="Un abri pour tous "
+                         span2.innerText="!"
+                         div.append(span1)
+                         div.append(i)
+                         div.append(span2)
+                         body.append(div)
+                         body.append(spacer)
+                         const _=dom_init("div")
+                         {
+                          const div=_
+                          {
+                           const _=concat("fragment-",device,".html")
+                           {
+                            const fragment=_
+                            {
+                             div.innerHTML=yield* xhr_load(fragment)
+                             body.append(div)
+                             pot.onclick=on_pot
+                             log("ok")
+                            }
+                           }
+                          }
+                         }
+                        }
+                       }
+                      }
+                     }
+                    }
+                   }
+                  }
+                 }
+                }
+               }
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+}
+main()
+</script>
+</body>
+</html>
